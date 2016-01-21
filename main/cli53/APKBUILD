@@ -1,0 +1,31 @@
+# Maintainer: Bob Gregory <bob@made.com>
+pkgname=cli53
+pkgver=0.6.8
+pkgrel=0
+pkgdesc="Route53 CLI in go"
+url="https://github.com/madedotcom/cli53"
+arch="x86_64"
+license="MIT"
+depends=""
+makedepends="go=1.5.3-r0"
+install=""
+subpackages=""
+source="$pkgname-$pkgver.tar.gz::https://github.com/barnybug/cli53/archive/$pkgver.tar.gz"
+
+
+_builddir="$srcdir/$pkgname-$pkgver"
+
+build() {
+    cd "$_builddir"
+    export GOPATH="/home/builder/package"
+    export GO15VENDOREXPERIMENT=1
+    go get github.com/barnybug/cli53
+    go build ./cmd/cli53
+}
+
+package() {
+    cd "$_builddir"
+    install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+
+sha512sums="4d88e4e188977b0bcf380b1ed7801d96643ecbcc84fb10566fa0a264fb75e61f80884a04e31d38e62a019cdc703af0ac5ad5cb934ba743a72520e0e854e96ce6  cli53-0.6.8.tar.gz"
