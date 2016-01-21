@@ -1,0 +1,27 @@
+# Maintainer: Bob Gregory <bob@made.com>
+pkgname=gosu
+pkgver=1.7
+pkgrel=0
+pkgdesc="tianon/gosu for Alpine"
+url="https://github.com/tianon/gosu"
+arch="x86_64"
+license="MIT"
+depends=""
+makedepends="go musl-dev linux-headers"
+install=""
+subpackages=""
+
+_builddir="$srcdir/$pkgname-$pkgver"
+
+build() {
+    cd "$_builddir"
+    export GOPATH="/home/builder/package"
+    go get github.com/tianon/gosu
+    go build github.com/tianon/gosu
+}
+
+package() {
+    cd "$_builddir"
+    install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+

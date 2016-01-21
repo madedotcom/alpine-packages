@@ -1,0 +1,30 @@
+# Maintainer: Bob Gregory <bob@made.com>
+pkgname=s3
+pkgver=1.1.4
+pkgrel=0
+pkgdesc="S3 cli tool"
+url="https://github.com/barnybug/s3"
+arch="x86_64"
+license="MIT"
+depends=""
+makedepends="go"
+install=""
+subpackages=""
+source="$pkgname-$pkgver.tar.gz::https://github.com/barnybug/s3/archive/$pkgver.tar.gz"
+
+
+_builddir="$srcdir/$pkgname-$pkgver"
+
+build() {
+    cd "$_builddir"
+    export GOPATH="/home/builder/package"
+    go get github.com/barnybug/s3
+    go build ./cmd/s3
+}
+
+package() {
+    cd "$_builddir"
+    install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+}
+
+sha512sums="84a17716c08433278a9b68aaa3dbe8f30899d78601935dea002225012ccb8b41f0a10e4cf1724b1ed913e6dc231400825868c4ba4a38292f985e6dba926a0a35  s3-1.1.4.tar.gz"
