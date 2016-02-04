@@ -12,7 +12,7 @@ makedepends="zlib-dev gnutls-dev
 	libnet-dev libgcrypt-dev libee-dev libestr-dev liblogging-dev hiredis-dev hiredis
 	json-c-dev util-linux-dev py-docutils"
 depends="hiredis libestr libgcrypt libee json-c"
-subpackages="$pkgname-tls $pkgname-redis $pkgname-json"
+subpackages="$pkgname-tls $pkgname-redis $pkgname-json $pkgname-doc"
 source="http://www.rsyslog.com/files/download/$pkgname/$pkgname-$pkgver.tar.gz
 	$pkgname.initd
 	$pkgname.confd
