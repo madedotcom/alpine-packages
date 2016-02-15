@@ -3,7 +3,7 @@
 # Contributor: Bartłomiej Piotrowski <nospam@bpiotrowski.pl>
 
 pkgname=nginx
-pkgver=1.9.7
+pkgver=1.9.11
 pkgrel=0
 pkgdesc="lightweight HTTP and reverse proxy server"
 url="http://www.nginx.org"
@@ -64,10 +64,12 @@ build() {
         --group=nginx \
         --with-ipv6 \
         --with-file-aio \
-        --with-pcre-jit \
         --with-http_ssl_module \
         --with-http_gzip_static_module \
         --with-http_auth_request_module \
+	--with-http_realip_module \
+	--with-pcre \
+	--with-pcre-jit \
         --add-module="$srcdir/nginx-module-vts-0.1.6" \
         --add-module="$srcdir/ngx_aws_auth-1.1.1" \
         || return 1
@@ -89,7 +91,15 @@ package() {
     install -d -m0700 "$pkgdir"/$_logdir || return 1
 }
 
-sha512sums="a3fa097164954b10120a0e7dca4b877da17c237f1e3ca47365aedf55ade2fe55b0f072404dcb909636b3afaa2b51f5c45b002b54424bd6b80ab76b835bbcc7de  nginx-1.9.7.tar.gz
+md5sums="76eb5853a1190e0cfc691aa21c545de3  nginx-1.9.11.tar.gz
+4b7591e764e0262f6a4b66cfa7c93121  nginx-module-vts.tar.gz
+826f81e98aea1f9510676fbf48384573  ngx_aws_auth-1.1.1.tar.gz
+023c34b1ce47398c1086ec5abf425037  ipv6.patch"
+sha256sums="6a5c72f4afaf57a6db064bba0965d72335f127481c5d4e64ee8714e7b368a51f  nginx-1.9.11.tar.gz
+ef7c5c9c748ab79264e8244f614ea79ad4d1ebfb108ab6b20a7b3e4a1da823d7  nginx-module-vts.tar.gz
+22e08411cd19ece7e23d7d0eb6b4a96c588258cafd8699ec1019eaf69874a628  ngx_aws_auth-1.1.1.tar.gz
+7a4845716508e6487a04942c2283d5cae0730716369cb5b379f81a21ce578f14  ipv6.patch"
+sha512sums="1ea79b8ade066faa4facdb13631b97c3228cc91f512dc98c7b1b153a489936f2bc13017ea67097cd303581720fd9bc3a212744ac0a03a1ea514e56321b407caa  nginx-1.9.11.tar.gz
 4d8779812db25c2267f354b4d63cdc403162c070a9d3bcdfa535558fd9f69eda447fe3b7cd03e5ab8289e514ba4bc7cf9940132c7e32287ca863eb497bf3fb4e  nginx-module-vts.tar.gz
 4c4ceb9118ef42b02fd23c5985b345c854382b1a32a47fd0085070ffd6c391cbdf732f77f1e4cc9c08ad1d32f8cc16335bd1f8638df3457560fa38fdb28c6e5e  ngx_aws_auth-1.1.1.tar.gz
 68d64a84568ec2df0366925ab282a05ebe21a85044b6c7844a47573cfd8cc8ed119cc772358bc3fff36e2d4fdf583a730592825f5f98632993ca86d1f8438d5f  ipv6.patch"
