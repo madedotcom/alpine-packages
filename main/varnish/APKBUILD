@@ -12,7 +12,8 @@ depends="gcc libc-dev libgcc"
 depends_dev=
 makedepends="$depends_dev pcre-dev ncurses-dev libedit-dev py-docutils"
 install="varnish.pre-install"
-subpackages="$pkgname-dev $pkgname-doc $pkgname-libs $pkgname-geoip"
+subpackages="$pkgname-dev $pkgname-doc $pkgname-libs $pkgname-geoip $pkgname-header"
+headerversion=af2631af9ae0e5289761bd173bd8278287563275
 pkgusers="varnish"
 pkggroups="varnish"
 source="http://repo.varnish-cache.org/source/varnish-$pkgver.tar.gz
@@ -22,7 +23,7 @@ source="http://repo.varnish-cache.org/source/varnish-$pkgver.tar.gz
 	varnishd.confd
 	varnishd.logrotate
 	maxminddb.vcl
-	libvmod-header.tar.gz::https://github.com/varnish/libvmod-header/archive/af2631af9ae0e5289761bd173bd8278287563275.tar.gz
+	libvmod-header.tar.gz::https://github.com/varnish/libvmod-header/archive/$headerversion.tar.gz
     "
 
 _builddir="$srcdir"/varnish-$pkgver
@@ -85,10 +86,10 @@ geoip() {
 header() {
      pkgdesc="Headers vmod for varnish"
      depends=""
-     
-     cd $pkgdir/libvmod-header
+
+     cd "$srcdir/libvmod-header-$headerversion"
      ./autogen.sh
-     ./configure VARNISHSRC=$_builddir/varnish-cache
+     ./configure VARNISHSRC=$_builddir
      make
      make install
 }
