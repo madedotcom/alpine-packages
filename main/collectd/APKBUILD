@@ -1,5 +1,4 @@
-# Contributor: Łukasz Jendrysik <scadu@yandex.com>
-# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+# Maintainer: Bob Gregory <bob@made.com>
 pkgname=collectd
 pkgver=5.5.1
 pkgrel=1
@@ -8,11 +7,11 @@ url="http://collectd.org"
 arch="all"
 license="GPL2"
 depends=""
-subpackages="$pkgname-doc"
+subpackages="$pkgname-doc $pkgname-riemann $pkgname-varnish $pkgname-mysql $pkgname-postgresql $pkgname-python"
 makedepends="curl-dev python-dev
 	libgcrypt-dev zlib-dev openssl-dev 
 	yajl-dev libxml2-dev bison flex linux-headers
-	hiredis-dev protobuf-c protobuf protobuf-dev protobuf-c-dev varnish-dev
+	protobuf-c protobuf protobuf-dev protobuf-c-dev varnish-dev mariadb-dev mariadb postgresql-dev postgresql
 	autoconf automake libtool"
 install=""
 source="https://github.com/collectd/collectd/archive/collectd-$pkgver.tar.gz
@@ -23,11 +22,6 @@ _builddir="$srcdir"/$pkgname-$pkgname-$pkgver
 prepare() {
 	cd "$_builddir"
 	update_config_sub || return 1
-	for i in $source; do
-		case $i in
-		*.patch) msg $i; patch -p1 -i "$srcdir"/$i || return 1;;
-		esac
-	done
 	autoreconf -vif || return 1
 	sed -i -e '/CFLAGS/s/-Werror//' configure src/Makefile.in \
 		src/*/Makefile.in || return 1
@@ -56,6 +50,7 @@ build() {
         --disable-memory \
         --disable-network \
         --disable-nginx \
+        --disable-perl \
         --disable-statsd \
         --disable-swap \
         --disable-syslog \
@@ -87,6 +82,46 @@ package() {
 
 	find "$pkgdir" \( -name perllocal.pod -o -name .packlist \) -delete
 }
+
+riemann() {
+	pkgdesc="Riemann output for collectd"
+	depends="protobuf-c protobuf collectd"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/write_riemann.* "$subpkgdir"/usr/lib/collectd/
+}
+
+varnish() {
+	pkgdesc="Varnish monitoring for collectd"
+    depends="collectd"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/varnish.* "$subpkgdir"/usr/lib/collectd/
+}
+
+mysql() {
+	pkgdesc="Mysql monitoring for collectd"
+    depends="collectd mariadb"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/mysql.* "$subpkgdir"/usr/lib/collectd/
+}
+
+postgresql() {
+    pkgdesc="Postgresql monitoring for collectd"
+    depends="collectd postgresql"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/postgresql.* "$subpkgdir"/usr/lib/collectd/
+}
+
+python() {
+    pkgdesc="Python plugin for collectd"
+    depends="collectd python"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/ 
+	mv "$pkgdir"/usr/lib/collectd/python.* "$subpkgdir"/usr/lib/collectd/
+}   
 
 d5sums="cc82aadebeb3544f60b39b61a1472bbf  collectd-5.5.1.tar.gz
 a8d5e984e2f2e06fa244b1500d861ee9  configure.ac"
