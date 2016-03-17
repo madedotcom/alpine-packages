@@ -8,7 +8,7 @@ http://git.alpinelinux.org/cgit/aports/tree/main/
 ## How to use MADE.COM packages and public repository.
 *I assume you are sensible enough to be using alpine.*
 
-Update your `Dckerfile` adding this:
+Update your `Dockerfile` adding this:
 
 ```
 ADD https://s3-eu-west-1.amazonaws.com/madecom-alpine-repo/main/ops%40made.com-5677cf76.rsa.pub /etc/apk/keys/abuild.rsa.pub
