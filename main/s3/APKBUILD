@@ -19,8 +19,10 @@ _builddir="$srcdir/$pkgname-$pkgver"
 build() {
     cd "$_builddir"
     export GOPATH="/home/builder/package"
+    echo "wow"
+    pwd
     go get github.com/madedotcom/s3/tree/grr-version-api
-    mv github.com/madedotcom/s3/tree/grr-version-api/* src/github.com/$pkgname-$pkgver/
+    mv src/github.com/madedotcom/s3/tree/grr-version-api/* src/github.com/$pkgname-$pkgver/
     go build ./cmd/s3
 }
 
