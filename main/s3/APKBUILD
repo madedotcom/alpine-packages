@@ -18,7 +18,7 @@ _builddir="$srcdir/$pkgname-$pkgver"
 
 build() {
     export GOPATH="/home/builder/package"
-    mkdir -p src/github.com/barnybug/s3/
+    mkdir -p /home/builder/package/src/github.com/barnybug/s3/
     ls
     pwd
     mv $srcdir/$pkgname-$pkgver/* /home/builder/package/src/github.com/barnybug/s3/
