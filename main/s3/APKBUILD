@@ -19,7 +19,7 @@ _builddir="$srcdir/$pkgname-$pkgver"
 build() {
     cd "$_builddir"
     export GOPATH="/home/builder/package"
-    go get github.com/barnybug/s3
+    go get github.com/madedotcom/s3/tree/grr-version-api
     go build ./cmd/s3
 }
 
