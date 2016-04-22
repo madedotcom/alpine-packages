@@ -10,7 +10,8 @@ depends=""
 makedepends="go"
 install=""
 subpackages=""
-source="$pkgname-$pkgver.tar.gz::https://github.com/barnybug/s3/archive/$pkgver.tar.gz"
+#source="$pkgname-$pkgver.tar.gz::https://github.com/barnybug/s3/archive/$pkgver.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/madedotcom/s3/archive/grr-version-api.tar.gz"
 
 
 _builddir="$srcdir/$pkgname-$pkgver"
@@ -27,4 +28,4 @@ package() {
     install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
 }
 
-sha512sums="84a17716c08433278a9b68aaa3dbe8f30899d78601935dea002225012ccb8b41f0a10e4cf1724b1ed913e6dc231400825868c4ba4a38292f985e6dba926a0a35  s3-1.1.4.tar.gz"
+sha512sums="5daf2818aafb4a8f7df992e8f8a7748a53aac9da68dd575b4429d1e2fb7639873cf4364f804b312ed6a68287388e82937a448b9955d051450c20c09d864b4791  grr-version-api.tar.gz"
