@@ -10,8 +10,8 @@ depends=""
 makedepends="go"
 install=""
 subpackages=""
-#source="$pkgname-$pkgver.tar.gz::https://github.com/barnybug/s3/archive/$pkgver.tar.gz"
-source="$pkgname-$pkgver.tar.gz::https://github.com/madedotcom/s3/archive/grr-version-api.tar.gz"
+source="$pkgname-$pkgver.tar.gz::https://github.com/barnybug/s3/archive/$pkgver.tar.gz"
+#source="$pkgname-$pkgver.tar.gz::https://github.com/madedotcom/s3/archive/grr-version-api.tar.gz"
 
 
 _builddir="$srcdir/$pkgname-$pkgver"
@@ -19,11 +19,8 @@ _builddir="$srcdir/$pkgname-$pkgver"
 build() {
     cd "$_builddir"
     export GOPATH="/home/builder/package"
-    echo "wow"
-    pwd
-    go get github.com/madedotcom/s3/tree/grr-version-api
-    mv src/github.com/madedotcom/s3/tree/grr-version-api/* src/github.com/$pkgname-$pkgver/
-    go build ./cmd/s3
+    cd $srcdir/$pkgname-$pkgver
+    make
 }
 
 package() {
@@ -31,4 +28,4 @@ package() {
     install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
 }
 
-sha512sums="709c20549396a32e6a3c5b85b7f5f94c69088b0e81d3fd6f369f4a2920843d1db71bbdad84e8ab4c8a5823cd9cecc62058da8ef8a8aa12833aeccf07a3c5dacb  $pkgname-$pkgver.tar.gz"
+sha512sums="84a17716c08433278a9b68aaa3dbe8f30899d78601935dea002225012ccb8b41f0a10e4cf1724b1ed913e6dc231400825868c4ba4a38292f985e6dba926a0a35  $pkgname-$pkgver.tar.gz"
