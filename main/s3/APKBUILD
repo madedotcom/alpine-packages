@@ -18,6 +18,7 @@ _builddir="$srcdir/$pkgname-$pkgver"
 
 build() {
     export GOPATH="/home/builder/package"
+    go get github.com/barnybug/s3
     make
     cd $srcdir/$pkgname-$pkgver
     make
