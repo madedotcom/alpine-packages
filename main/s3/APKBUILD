@@ -1,6 +1,6 @@
 # Maintainer: Bob Gregory <bob@made.com>
 pkgname=s3
-pkgver=1.1.4
+pkgver=1.1.5
 pkgrel=0
 pkgdesc="S3 cli tool"
 url="https://github.com/barnybug/s3"
@@ -28,4 +28,4 @@ package() {
     install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
 }
 
-sha512sums="5daf2818aafb4a8f7df992e8f8a7748a53aac9da68dd575b4429d1e2fb7639873cf4364f804b312ed6a68287388e82937a448b9955d051450c20c09d864b4791  grr-version-api.tar.gz"
+sha512sums="5daf2818aafb4a8f7df992e8f8a7748a53aac9da68dd575b4429d1e2fb7639873cf4364f804b312ed6a68287388e82937a448b9955d051450c20c09d864b4791  $pkgname-$pkgver.tar.gz"
