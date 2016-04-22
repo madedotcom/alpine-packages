@@ -18,12 +18,15 @@ _builddir="$srcdir/$pkgname-$pkgver"
 
 build() {
     export GOPATH="/home/builder/package"
-    go get github.com/barnybug/s3
+    mkdir -p src/github.com/barnybug/s3/
+    ls
+    pwd
+    mv $srcdir/$pkgname-$pkgver/* src/github.com/barnybug/s3/
+    cd src/github.com/barnybug/s3/
+    ls
+    pwd
+    ls $srcdir
     make
-    cd $srcdir/$pkgname-$pkgver
-    make
-    ls $srcdir/$pkgname-$pkgver
-    ls /home/builder/package/src
 }
 
 package() {
