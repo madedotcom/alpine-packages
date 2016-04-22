@@ -19,8 +19,10 @@ _builddir="$srcdir/$pkgname-$pkgver"
 build() {
     export GOPATH="/home/builder/package"
     make
-    ls
-    ls /home/builder/package
+    cd $srcdir/$pkgname-$pkgver
+    make
+    ls $srcdir/$pkgname-$pkgver
+    ls /home/builder/package/src
 }
 
 package() {
