@@ -28,4 +28,4 @@ package() {
     install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
 }
 
-sha512sums="5daf2818aafb4a8f7df992e8f8a7748a53aac9da68dd575b4429d1e2fb7639873cf4364f804b312ed6a68287388e82937a448b9955d051450c20c09d864b4791  $pkgname-$pkgver.tar.gz"
+sha512sums="709c20549396a32e6a3c5b85b7f5f94c69088b0e81d3fd6f369f4a2920843d1db71bbdad84e8ab4c8a5823cd9cecc62058da8ef8a8aa12833aeccf07a3c5dacb  $pkgname-$pkgver.tar.gz"
