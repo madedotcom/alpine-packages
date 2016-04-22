@@ -1,6 +1,6 @@
 # Maintainer: Bob Gregory <bob@made.com>
 pkgname=s3
-pkgver=1.1.5
+pkgver=1.1.4
 pkgrel=0
 pkgdesc="S3 cli tool"
 url="https://github.com/barnybug/s3"
