@@ -19,9 +19,11 @@ _builddir="$srcdir/$pkgname-$pkgver"
 build() {
     export GOPATH="/home/builder/package"
     mkdir -p /home/builder/package/src/github.com/barnybug/s3/
-    ls
-    pwd
+    mkdir -p /home/builder/package/src/github.com/aws/aws-sdk-go/
+    mkdir -p /home/builder/package/src/github.com/codegangsta/cli/
     mv $srcdir/$pkgname-$pkgver/* /home/builder/package/src/github.com/barnybug/s3/
+    cp -r /home/builder/package/src/github.com/barnybug/s3/vendor/aws/aws-sdk-go/* /home/builder/package/src/github.com/aws/aws-sdk-go/
+    cp -r /home/builder/package/src/github.com/barnybug/s3/vendor/codegangsta/cli/* /home/builder/package/src/github.com/codegangsta/cli/
     cd /home/builder/package/src/github.com/barnybug/s3/
     make
 }
