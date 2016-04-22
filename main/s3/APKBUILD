@@ -21,11 +21,8 @@ build() {
     mkdir -p src/github.com/barnybug/s3/
     ls
     pwd
-    mv $srcdir/$pkgname-$pkgver/* src/github.com/barnybug/s3/
-    cd src/github.com/barnybug/s3/
-    ls
-    pwd
-    ls $srcdir
+    mv $srcdir/$pkgname-$pkgver/* /home/builder/package/src/github.com/barnybug/s3/
+    cd /home/builder/package/src/github.com/barnybug/s3/
     make
 }
 
