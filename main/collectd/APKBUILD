@@ -1,0 +1,132 @@
+# Maintainer: Bob Gregory <bob@made.com>
+pkgname=collectd
+pkgver=5.5.1
+pkgrel=1
+pkgdesc="The system statistics collection daemon"
+url="http://collectd.org"
+arch="all"
+license="GPL2"
+depends=""
+subpackages="$pkgname-doc $pkgname-riemann $pkgname-varnish $pkgname-mysql $pkgname-postgresql $pkgname-python"
+makedepends="curl-dev python-dev
+	libgcrypt-dev zlib-dev openssl-dev 
+	yajl-dev libxml2-dev bison flex linux-headers
+	protobuf-c protobuf protobuf-dev protobuf-c-dev varnish-dev mariadb-dev mariadb postgresql-dev postgresql
+	autoconf automake libtool"
+install=""
+source="https://github.com/collectd/collectd/archive/collectd-$pkgver.tar.gz
+        configure.ac
+        "
+
+_builddir="$srcdir"/$pkgname-$pkgname-$pkgver
+prepare() {
+	cd "$_builddir"
+	update_config_sub || return 1
+	autoreconf -vif || return 1
+	sed -i -e '/CFLAGS/s/-Werror//' configure src/Makefile.in \
+		src/*/Makefile.in || return 1
+}
+
+build() {
+	cd "$_builddir"
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc/collectd \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+        --enable-write_riemann \
+        --disable-cpu \
+        --disable-cpu-freq \
+        --disable-df \
+        --disable-disk \
+        --disable-entropy \
+        --disable-ethstat \
+        --disable-hddtemp \
+        --disable-load \
+        --disable-log_logstash \
+        --disable-madwifi \
+        --disable-memory \
+        --disable-network \
+        --disable-nginx \
+        --disable-perl \
+        --disable-statsd \
+        --disable-swap \
+        --disable-syslog \
+        --disable-teamspeak2 \
+        --disable-thermal \
+        --disable-write_redis \
+        --disable-write_http \
+        --disable-write_sensu \
+        --disable-apache \
+        --disable-battery \
+        --disable-apcups \
+        --disable-ascent \
+        --disable-ceph \
+        --disable-email \
+        --disable-zookeeper \
+        --disable-write_tsdb \
+        --disable-write_graphite \
+        --localstatedir=/var \
+		|| return 1
+	make || return 1
+	# disable network plugin by default since its in a subpackage
+	sed -i -e 's/^LoadPlugin network/#LoadPlugin network/' \
+		src/collectd.conf
+}
+
+package() {
+	cd "$_builddir"
+	make DESTDIR="$pkgdir" install || return 1
+
+	find "$pkgdir" \( -name perllocal.pod -o -name .packlist \) -delete
+}
+
+riemann() {
+	pkgdesc="Riemann output for collectd"
+	depends="protobuf-c protobuf collectd"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/write_riemann.* "$subpkgdir"/usr/lib/collectd/
+}
+
+varnish() {
+	pkgdesc="Varnish monitoring for collectd"
+    depends="collectd"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/varnish.* "$subpkgdir"/usr/lib/collectd/
+}
+
+mysql() {
+	pkgdesc="Mysql monitoring for collectd"
+    depends="collectd mariadb"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/mysql.* "$subpkgdir"/usr/lib/collectd/
+}
+
+postgresql() {
+    pkgdesc="Postgresql monitoring for collectd"
+    depends="collectd postgresql"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/lib/collectd/postgresql.* "$subpkgdir"/usr/lib/collectd/
+}
+
+python() {
+    pkgdesc="Python plugin for collectd"
+    depends="collectd python"
+	arch="all"
+	install -d "$subpkgdir"/usr/lib/collectd/ 
+	mv "$pkgdir"/usr/lib/collectd/python.* "$subpkgdir"/usr/lib/collectd/
+}   
+
+d5sums="cc82aadebeb3544f60b39b61a1472bbf  collectd-5.5.1.tar.gz
+a8d5e984e2f2e06fa244b1500d861ee9  configure.ac"
+sha256sums="89eed3c26afde464feff12379d6d61448a61cf6e21014d871576c711b77f460d  collectd-5.5.1.tar.gz
+3c23b09dbbe83c8b808971e2142a2051c590f83b1e447ac1e18645e6033037c2  configure.ac"
+sha512sums="73d4ea1073fa213dc04c95f3495846b9f690fea2df69b0b2d258f83eac2d72c3694422fe96c65188b4baef7bd361046e60d99fd247489c4a925bb5bf5716ba68  collectd-5.5.1.tar.gz
+12750363dda459705a45f15c21e997dc6bb26d189c4004384a5fd6e742bf4f19fab66a6a65885393587cda8bde38785fb9e1d0275a61123491195efa65d85bd9  configure.ac"
+
