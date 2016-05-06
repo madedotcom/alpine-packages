@@ -1,0 +1,51 @@
+# Contributor: Sander Maijers <S.N.Maijers+Alpine@gmail.com>
+# Maintainer: Sander Maijers <S.N.Maijers+Alpine@gmail.com>
+pkgname='xmlsec'
+pkgver='1.2.22'
+pkgrel='0'
+pkgdesc="Provides a C based implementation for XML Signature Syntax and Processing and XML Encryption Syntax and Processing."
+url="https://www.aleksey.com/${pkgname}"
+arch="all"
+license="MIT"
+depends=""
+depends_dev=
+makedepends="${depends_dev} libxml2-dev libxslt-dev openssl-dev libtool"
+install=
+subpackages="${pkgname}-dev ${pkgname}-doc"
+source="${url}/download/${pkgname}1-${pkgver}.tar.gz"
+_builddir="${srcdir}/${pkgname}1-${pkgver}"
+
+prepare() {
+    :
+}
+
+build() {
+	cd "${_builddir}"
+	./configure \
+		--build="$CBUILD" \
+		--host="$CHOST" \
+		--prefix='/usr' \
+		--disable-static \
+		--enable-pkgconfig \
+		--with-default-crypto='openssl' \
+		|| return 1
+	make || return 1
+}
+
+check() {
+	cd "${_builddir}" &&
+	make -k check || return 1
+}
+
+package() {
+	cd "${_builddir}" &&
+	make DESTDIR="${pkgdir}" install || return 1
+
+	install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}" &&
+	install -m644 'COPYING' "${pkgdir}/usr/share/licenses/${pkgname}/" \
+		|| return 1
+}
+
+md5sums="0fb1bb06d60d7708abc4797008209bcc  xmlsec1-1.2.22.tar.gz"
+sha256sums="8c06bf161c565b907a499e6d906f0b640f063b2b4efd2b471048ac5b3c1ad527  xmlsec1-1.2.22.tar.gz"
+sha512sums="69ea729cc8e3154e0644b076c8217905920b7e5ef0360640a750f73d90c8a1d8bf139c6400571a7940727c85413a8f69b2204801d2fe97796ff944eb09bbbb69  xmlsec1-1.2.22.tar.gz"
