@@ -5,6 +5,14 @@ This repo is used in combination with https://github.com/madedotcom/alpine-jazz-
 If you have no idea what you are doing, have a look here:
 http://git.alpinelinux.org/cgit/aports/tree/main/
 
+
+### Pull requests and contribution workflow.
+
+```
+master > feature PR
+feature pr > master
+```
+
 ## How to use MADE.COM packages and public repository.
 *I assume you are sensible enough to be using alpine.*
 
