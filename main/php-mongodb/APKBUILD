@@ -1,0 +1,34 @@
+# Maintainer: Adrian Movileanu <adrian.movileanu@made.com>
+
+pkgname=php-mongodb
+pkgver=1.1.6
+pkgrel=1
+pkgdesc="MongoDB driver for PHP"
+arch="noarch"
+url="http://mongodb.github.io/mongo-php-driver"
+license=Apache
+depends='php'
+makedepends='php-dev re2c autoconf libsasl'
+backup="etc/php/conf.d/mongodb.ini"
+#install="php-mongodb.install"
+source="http://pecl.php.net/get/mongodb-$pkgver.tgz
+        mongodb.ini"
+
+build() {
+    abuild-apk add libmongoc@made
+    cd mongodb-$pkgver
+    phpize
+    ./configure --prefix=/usr --with-libbson --with-libmongoc
+}
+
+package() {
+    cd mongodb-$pkgver
+    make INSTALL_ROOT="$pkgdir" install
+    install -Dm644 "$srcdir/mongodb.ini" "$pkgdir/etc/php/conf.d/mongodb.ini"
+}
+md5sums="8618d27f2ac2dca5c0b39eed22b892af  mongodb-1.1.6.tgz
+9ad439be1bf5161b7b52610e58e14b3a  mongodb.ini"
+sha256sums="cd4bb7402911431098ef6c12562dca53a89808ed1ba9798131002be1c61c6b59  mongodb-1.1.6.tgz
+242b9ffea6bd84f813c7fc2a767eaa89f83577c5ff10ff36aecec2ca308ff72b  mongodb.ini"
+sha512sums="5f726eca61398759d99315221770d119ad187a4dd3d2ed50438d28c0deca94d79fb1e90106f836c0eb0ef3e7eb495f10999d925af8c9e40e9f9f2e23dc43c0bb  mongodb-1.1.6.tgz
+47b167ab4d761f4cf8351fef14e46c714dacae6d9a1b6d281bb87129499ee520f55f35f47c16b55ea2ecf41c67aad12439a99d3363d381b2511659b01f0b6ef0  mongodb.ini"
