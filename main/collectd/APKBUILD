@@ -8,16 +8,16 @@ url="http://collectd.org"
 arch="all"
 license="GPL2"
 depends=""
-makedepends="curl-dev net-snmp-dev postgresql-dev perl-dev python-dev
+makedepends="curl-dev postgresql-dev python-dev
 	libgcrypt-dev mariadb-dev zlib-dev openssl-dev iptables-dev
-	rrdtool-dev yajl-dev libvirt-dev lm_sensors-dev libxml2-dev
+	yajl-dev libxml2-dev
 	hiredis-dev varnish-dev protobuf-c-dev
 	autoconf automake libtool"
 install=""
-subpackages="$pkgname-dev $pkgname-doc $pkgname-perl $pkgname-snmp
+subpackages="$pkgname-dev $pkgname-doc 
 	$pkgname-curl:_curl $pkgname-varnish
-	$pkgname-write_http $pkgname-nginx $pkgname-apache $pkgname-postgresql
-	$pkgname-mysql $pkgname-network $pkgname-rrdtool $pkgname-sensors
+	$pkgname-nginx $pkgname-apache $pkgname-postgresql
+	$pkgname-mysql $pkgname-network 
 	$pkgname-python:_python $pkgname-iptables:_ipt $pkgname-bind
 	$pkgname-ascent $pkgname-virt $pkgname-redis"
 
@@ -48,8 +48,8 @@ build() {
 		--infodir=/usr/share/info \
 		--localstate=/var \
 		--with-libiptc \
-		--enable-rrdtool \
-		--enable-libvirt \
+        --enable-write_redis=no \
+        --enable-write_http=no \
 		--enable-bind \
 		|| return 1
 	make || return 1
@@ -78,7 +78,7 @@ _plugin() {
 	local mod=$1
 	local desc=${2:-$mod}
 	pkgdesc="$desc pluin for collectd"
-	depends="collectd"
+	depends="collectd@made"
 	install -d "$subpkgdir"/usr/lib/collectd
 	mv "$pkgdir"/usr/lib/collectd/$mod.so "$subpkgdir"/usr/lib/collectd/
 }
