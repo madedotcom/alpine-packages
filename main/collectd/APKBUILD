@@ -11,7 +11,7 @@ depends=""
 makedepends="curl-dev net-snmp-dev postgresql-dev perl-dev python-dev
 	libgcrypt-dev mariadb-dev zlib-dev openssl-dev iptables-dev
 	rrdtool-dev yajl-dev libvirt-dev lm_sensors-dev libxml2-dev
-	hiredis-dev varnish-libs protobuf-c-dev
+	hiredis-dev varnish-dev protobuf-c-dev
 	autoconf automake libtool"
 install=""
 subpackages="$pkgname-dev $pkgname-doc $pkgname-perl $pkgname-snmp
