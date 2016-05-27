@@ -1,0 +1,106 @@
+# Contributor: Łukasz Jendrysik <scadu@yandex.com>
+# Maintainer: Natanael Copa <ncopa@alpinelinux.org>
+pkgname=collectd
+pkgver=5.5.1
+pkgrel=1
+pkgdesc="The system statistics collection daemon"
+url="http://collectd.org"
+arch="all"
+license="GPL2"
+depends=""
+makedepends="curl-dev net-snmp-dev postgresql-dev perl-dev python-dev
+	libgcrypt-dev mariadb-dev zlib-dev openssl-dev iptables-dev
+	rrdtool-dev yajl-dev libvirt-dev lm_sensors-dev libxml2-dev
+	hiredis-dev varnish-libs protobuf-c-dev
+	autoconf automake libtool"
+install=""
+subpackages="$pkgname-dev $pkgname-doc $pkgname-perl $pkgname-snmp
+	$pkgname-curl:_curl $pkgname-varnish
+	$pkgname-write_http $pkgname-nginx $pkgname-apache $pkgname-postgresql
+	$pkgname-mysql $pkgname-network $pkgname-rrdtool $pkgname-sensors
+	$pkgname-python:_python $pkgname-iptables:_ipt $pkgname-bind
+	$pkgname-ascent $pkgname-virt $pkgname-redis"
+
+source="http://collectd.org/files/collectd-$pkgver.tar.gz"
+
+_builddir="$srcdir"/$pkgname-$pkgver
+prepare() {
+	cd "$_builddir"
+	update_config_sub || return 1
+	for i in $source; do
+		case $i in
+		*.patch) msg $i; patch -p1 -i "$srcdir"/$i || return 1;;
+		esac
+	done
+	autoreconf -vif || return 1
+	sed -i -e '/CFLAGS/s/-Werror//' configure src/Makefile.in \
+		src/*/Makefile.in || return 1
+}
+
+build() {
+	cd "$_builddir"
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc/collectd \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--localstate=/var \
+		--with-libiptc \
+		--enable-rrdtool \
+		--enable-libvirt \
+		--enable-bind \
+		|| return 1
+	make || return 1
+	# disable network plugin by default since its in a subpackage
+	sed -i -e 's/^LoadPlugin network/#LoadPlugin network/' \
+		src/collectd.conf
+}
+
+package() {
+	cd "$_builddir"
+	make DESTDIR="$pkgdir" install || return 1
+
+	find "$pkgdir" \( -name perllocal.pod -o -name .packlist \) -delete
+}
+
+perl() {
+	pkgdesc="perl bindings to collectd"
+	depends="perl"
+	arch="noarch"
+	install -d "$subpkgdir"/usr/lib/ "$subpkgdir"/usr/share
+	mv "$pkgdir"/usr/lib/perl* "$subpkgdir"/usr/lib/
+#	mv "$pkgdir"/usr/share/perl* "$subpkgdir"/usr/share/
+}
+
+_plugin() {
+	local mod=$1
+	local desc=${2:-$mod}
+	pkgdesc="$desc pluin for collectd"
+	depends="collectd"
+	install -d "$subpkgdir"/usr/lib/collectd
+	mv "$pkgdir"/usr/lib/collectd/$mod.so "$subpkgdir"/usr/lib/collectd/
+}
+
+snmp()		{ _plugin snmp; }
+_curl()		{ _plugin 'curl*'; }
+write_http()	{ _plugin write_http; }
+nginx()		{ _plugin nginx; }
+apache()	{ _plugin apache; }
+postgresql()	{ _plugin postgresql; }
+mysql()		{ _plugin mysql; }
+network()	{ _plugin network; }
+rrdtool()	{ _plugin 'rrd*'; }
+sensors()	{ _plugin sensors; }
+_python()	{ _plugin python; }
+_ipt()		{ _plugin iptables; }
+bind()		{ _plugin bind; }
+ascent()	{ _plugin ascent; }
+redis()		{ _plugin redis; }
+varnish()   { _plugin varnish; }
+virt()		{ _plugin virt; provides="$pkgname-libvirt"; }
+
+
+
+sha512sums="9ad37b870deaf6f05ba5eeb4b63762a9539b4a487e69321694d094194d55c0b8d7b6dfa0527d7ea989ec4c60432c1dc21f9481b17f713399de37e51898958888 collectd-5.5.1.tar.gz"
