@@ -1,0 +1,50 @@
+# Maintainer: Bob Gregory <bob@made.com>
+pkgname=libiconv
+pkgver=1.14
+pkgrel=1
+pkgdesc="Gnu libiconv"
+url="https://www.gnu.org/software/libiconv/"
+arch="all"
+options="charset.alias"
+license="LGPL"
+depends=""
+makedepends="libtool autoconf automake"
+subpackages="$pkgname-doc $pkgname-dev"
+
+source="http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz
+libiconv-1-fixes.patch
+"
+
+_builddir="$srcdir"/$pkgname-$pkgver
+
+build () {
+    cd "$_builddir"
+    ./configure --prefix=/usr --mandir=/usr/share/man || return 1
+    # work around rpath issue
+    sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+    sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+    make || return 1
+}
+
+prepare() {
+	cd "$_builddir"
+	update_config_sub || return 1
+	for i in $source; do
+		case $i in
+		*.patch) msg $i; patch -p1 -i "$srcdir"/$i || return 1;;
+		esac
+	done
+}
+
+package () {
+    cd "$_builddir"
+    make DESTDIR="$pkgdir" install || return 1
+}
+
+
+md5sums="e34509b1623cec449dfeb73d7ce9c6c6  libiconv-1.14.tar.gz
+cf76da3c256e7e105b6974eb8e4bd354  libiconv-1-fixes.patch"
+sha256sums="72b24ded17d687193c3366d0ebe7cde1e6b18f0df8c55438ac95be39e8a30613  libiconv-1.14.tar.gz
+8db19b3780a2692b23380fbff673fc81c6c607f7d75fce30605627a002a37686  libiconv-1-fixes.patch"
+sha512sums="b96774fefc4fa1d07948fcc667027701373c34ebf9c4101000428e048addd85a5bb5e05e59f80eb783a3054a3a8a3c0da909450053275bbbf3ffde511eb3f387  libiconv-1.14.tar.gz
+971ac9a792469d210303c3b43833fdd9545be9ffe17b61febf93297dcca239b4f144c6d83e9419f94b8abab330b6f7e2916cbea55fb42ccbb12f0d5ab165ba9b  libiconv-1-fixes.patch"
