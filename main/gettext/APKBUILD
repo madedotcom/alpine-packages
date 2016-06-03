@@ -1,0 +1,61 @@
+# Contributor: Valery Kartel <valery.kartel@gmail.com>
+# Maintainer: Carlo Landmeter <clandmeter@gmail.com>
+pkgname=gettext
+pkgver=0.19.7
+pkgrel=3
+pkgdesc="GNU locale utilities"
+url="http://www.gnu.org/software/gettext/gettext.html"
+arch="all"
+license="GPL"
+depends=
+# do _not_ add the optional dependencies on libcroco or glib
+# they depend on gettext and would introduce cyclic dependencies
+makedepends="perl ncurses-dev libxml2-dev libunistring-dev"
+source="ftp://ftp.gnu.org/gnu/$pkgname/$pkgname-$pkgver.tar.xz
+	fix-abi.patch"
+subpackages="$pkgname-doc $pkgname-dev $pkgname-lang libintl $pkgname-asprintf $pkgname-libs"
+
+_builddir="$srcdir"/$pkgname-$pkgver
+
+build() {
+	cd "$_builddir"
+	# force using system posix complaint printf
+	# the test is broken and fails with ash
+	abuild-apk add libiconv@made
+	gt_cv_func_printf_posix=yes \
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--enable-threads=posix \
+		--disable-java \
+		--disable-static \
+		|| return 1
+	make || return 1
+}
+
+package() {
+	cd "$_builddir"
+	make -j1 DESTDIR="$pkgdir" install || return 1
+	rm "$pkgdir"/usr/lib/charset.alias
+}
+
+libintl() {
+	pkgdesc="GNU gettext runtime library"
+	mkdir -p "$subpkgdir"/usr/lib
+	mv "$pkgdir"/usr/lib/libintl.so.* "$subpkgdir"/usr/lib
+	chmod +x "$subpkgdir"/usr/lib/libintl.so.*
+}
+
+asprintf() {
+	pkgdesc="GNU gettext asprintf library"
+	mkdir -p "$subpkgdir"/usr/lib
+	mv "$pkgdir"/usr/lib/libasprintf.so.* "$subpkgdir"/usr/lib
+}
+
+md5sums="f81e50556da41b44c1d59ac93474dca5  gettext-0.19.7.tar.xz
+054ee44e6dfb056efd42dc3063e273ae  fix-abi.patch"
+sha256sums="378fa86a091cec3acdece3c961bb8d8c0689906287809a8daa79dc0c6398d934  gettext-0.19.7.tar.xz
+48dff403e8966137e900186b2fbf9adaf7c3743ccc4c4d05b2b250009a0a6273  fix-abi.patch"
+sha512sums="a8ed47fc38d8730ccd46bfa6620c0b42efcfcbfa39fa94ddecb2fa3b62b377827f29e702dc327fbc682b98534e1f54783d21a3bb5ba629f6358be00bfb4da009  gettext-0.19.7.tar.xz
+f517a351864bb194117e7147015db9a9b0ffbb1feb22ecf39bc1c99ad904420467e267a893c3b1a76c1adb810d1b37b1c2c1273cda861ff1d260102701bc644a  fix-abi.patch"
