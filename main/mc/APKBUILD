@@ -1,0 +1,26 @@
+# Maintainer: Bob Gregory <bob@made.com>
+pkgname=mc
+pkgver=1.0.0
+pkgrel=1
+url="https://github.com/minio/mc"
+pkgdesc="Minio Client is a replacement for ls, cp, mkdir, diff and rsync commands for filesystems and object storage"
+arch="all"
+license="ASL 2.0"
+makedepends="go godep git go-tools bash"
+
+_builddir="$srcdir/$pkgname-$pkgver"
+
+build () {
+    mkdir -p "$_builddir"
+    export GOPATH="/home/builder/package"
+    export GOROOT="/usr/lib/go"
+    export GO15VENDOREXPERIMENT=1 
+    go get -u github.com/minio/mc
+    cd "$GOPATH"/src/github.com/minio/mc
+    go build -o "$_builddir/mc"
+    }
+
+package () {
+   cd "$_builddir"
+   install -Dm755 mc "$pkgdir/usr/bin/mc"
+}
