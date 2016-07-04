@@ -78,7 +78,7 @@ perl() {
 _java() {
 	pkgdesc="java bindings to collectd"
 	depends="openjdk8"
-	arch="noarch"
+	arch="all"
 	install -d "$subpkgdir"/usr/lib/collectd
 	mv "$pkgdir"/usr/lib/collectd/java.so "$subpkgdir"/usr/lib/collectd/
 }
