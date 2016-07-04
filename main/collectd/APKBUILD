@@ -18,7 +18,7 @@ subpackages="$pkgname-dev $pkgname-doc
 	$pkgname-curl:_curl $pkgname-varnish
 	$pkgname-nginx $pkgname-apache $pkgname-postgresql
 	$pkgname-mysql $pkgname-network 
-	$pkgname-java
+	$pkgname-java:_java
 	$pkgname-python:_python $pkgname-iptables:_ipt $pkgname-bind
 	$pkgname-ascent $pkgname-virt $pkgname-redis"
 
@@ -73,6 +73,14 @@ perl() {
 	install -d "$subpkgdir"/usr/lib/ "$subpkgdir"/usr/share
 	mv "$pkgdir"/usr/lib/perl* "$subpkgdir"/usr/lib/
 #	mv "$pkgdir"/usr/share/perl* "$subpkgdir"/usr/share/
+}
+
+_java() {
+	pkgdesc="java bindings to collectd"
+	depends="openjdk8"
+	arch="noarch"
+	install -d "$subpkgdir"/usr/lib/collectd
+	mv "$pkgdir"/usr/lib/collectd/java.so "$subpkgdir"/usr/lib/collectd/
 }
 
 _plugin() {
