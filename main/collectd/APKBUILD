@@ -81,6 +81,8 @@ _java() {
 	arch="all"
 	install -d "$subpkgdir"/usr/lib/collectd
 	mv "$pkgdir"/usr/lib/collectd/java.so "$subpkgdir"/usr/lib/collectd/
+	mv "$pkgdir"/usr/share/collectd/java/collectd-api.jar "$subpkgdir"/usr/share/
+	mv "$pkgdir"/usr/share/collectd/java/generic-jmx.jar "$subpkgdir"/usr/share/
 }
 
 _plugin() {
