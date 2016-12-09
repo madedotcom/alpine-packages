@@ -1,0 +1,19 @@
+--- varnish-modules-varnish-modules-0.9.0/src/Makefile.am	2016-04-20 14:08:39.015780317 +0100
++++ varnish-modules-varnish-modules-0.9.0/src/Makefile.am	2016-04-20 14:09:09.129327749 +0100
+@@ -1,15 +1,7 @@
+ AM_CPPFLAGS = @VMOD_INCLUDES@ -I$(top_srcdir)/src/foreign -Wall -Werror
+ 
+ vmoddir = @VMOD_DIR@
+-vmod_LTLIBRARIES = libvmod_cookie.la \
+-	libvmod_header.la \
+-	libvmod_saintmode.la \
+-	libvmod_softpurge.la \
+-	libvmod_tcp.la \
+-	libvmod_var.la \
+-	libvmod_vsthrottle.la \
+-	libvmod_xkey.la
+-
++vmod_LTLIBRARIES = libvmod_xkey.la
+ 
+ libvmod_cookie_la_LDFLAGS = -module -export-dynamic -avoid-version -shared
+ libvmod_cookie_la_SOURCES = vcc_cookie_if.c vcc_cookie_if.h vmod_cookie.c
