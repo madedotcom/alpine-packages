@@ -1,0 +1,30 @@
+# Maintainer: Bob Gregory <bob@made.com>
+pkgname=setup-network-environment
+pkgver=1.0.2
+pkgrel=0
+pkgdesc="Generates an environment file describing network interfaces"
+url="https://github.com/madedotcom/setup-network-environment"
+arch="x86_64"
+license="MIT"
+depends=""
+makedepends="go"
+install=""
+subpackages=""
+source="$pkgname-$pkgver.tar.gz::https://github.com/madedotcom/$pkgname/archive/$pkgver.tar.gz"
+
+
+_builddir="$srcdir/$pkgname-$pkgver"
+
+build() {
+    cd "$_builddir"
+    export GOPATH="/home/builder/package"
+    go get
+    go build 
+}
+
+package() {
+    cd "$_builddir"
+    install -Dm755 $pkgname-$pkgver "$pkgdir/usr/bin/$pkgname"
+}
+
+md5sums="3a330e5b3e60d43d33fd5600028a45750cc9a262f43640d306898a5aa92af8ad  $pkgname-$pkgver.tar.gz"
