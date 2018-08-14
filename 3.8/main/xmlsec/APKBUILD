@@ -47,6 +47,6 @@ package() {
         || return 1
 }
 
-md5sums="¯\_(ツ)_/¯  ${filename}"
-sha256sums="¯\_(ツ)_/¯  ${filename}"
-sha512sums="¯\_(ツ)_/¯ ${filename}"
+md5sums="9c4aaf9ff615a73921b9e3bf4988d878 ${filename}"
+sha256sums="8d8276c9c720ca42a3b0023df8b7ae41a2d6c5f9aa8d20ed1672d84cc8982d50 ${filename}"
+sha512sums="1e3dc3c8c192eefee7b055787bef52ce3bcfafa786224f68af065aa45f4d7da93232da973359b3135615c5981ad4df7c124047d3934e552ab78439472685a7a4 ${filename}"
