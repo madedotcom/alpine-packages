@@ -1,0 +1,52 @@
+# Contributor: Harry Percival <harry.percival@made.com>
+# Reason for custom build: https://bugs.alpinelinux.org/issues/9110
+pkgname='xmlsec'
+pkgver='1.2.26'
+pkgrel='0'
+pkgdesc="Provides a C based implementation for XML Signature Syntax and Processing and XML Encryption Syntax and Processing."
+url="https://www.aleksey.com/${pkgname}"
+arch="all"
+license="MIT"
+depends=""
+depends_dev=
+makedepends="${depends_dev} libxml2-dev openssl-dev"
+install=
+subpackages="${pkgname}-dev ${pkgname}-doc"
+filename="${pkgname}1-${pkgver}.tar.gz"
+source="${url}/download/${filename}"
+_builddir="${srcdir}/${pkgname}1-${pkgver}"
+
+prepare() {
+    :
+}
+
+build() {
+    cd "${_builddir}"
+    ./configure \
+        --build="$CBUILD" \
+        --host="$CHOST" \
+        --prefix='/usr' \
+        --enable-crypto-dl=no
+        --enable-pkgconfig \
+        || return 1
+    make || return 1
+}
+
+check() {
+    cd "${_builddir}" &&
+    make -k check || return 1
+}
+
+package() {
+    cd "${_builddir}" &&
+    make DESTDIR="${_builddir}main" &&
+    make DESTDIR="${pkgdir}" install || return 1
+
+    install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}" &&
+    install -m644 'COPYING' "${pkgdir}/usr/share/licenses/${pkgname}/" \
+        || return 1
+}
+
+md5sums="¯\_(ツ)_/¯  ${filename}"
+sha256sums="¯\_(ツ)_/¯  ${filename}"
+sha512sums="¯\_(ツ)_/¯ ${filename}"
