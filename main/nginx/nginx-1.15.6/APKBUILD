@@ -1,0 +1,84 @@
+# Maintainer: Cameron Banta <cbanta@gmail.com>
+# Contributor: Jeff Bilyk <jbilyk@gmail.com>
+# Contributor: Bartłomiej Piotrowski <nospam@bpiotrowski.pl>
+
+pkgname=nginx
+pkgver=1.15.6
+pkgrel=0
+pkgdesc="lightweight HTTP and reverse proxy server"
+url="http://www.nginx.org"
+arch="all"
+license="custom"
+pkgusers="nginx"
+pkggroups="nginx"
+install=""
+# the nginx-initscritps provides openrc script, logrotate and user creation
+depends=""
+makedepends="pcre-dev openssl-dev zlib-dev linux-headers"
+source="http://nginx.org/download/$pkgname-$pkgver.tar.gz
+    nginx-module-vts.tar.gz::https://github.com/vozlt/nginx-module-vts/archive/v0.1.18.tar.gz
+	"
+
+_builddir="$srcdir"/$pkgname-$pkgver
+
+prepare() {
+	cd "$_builddir"
+	for i in $source; do
+		case $i in
+		*.patch) msg $i; patch -p1 -i "$srcdir"/$i || return 1;;
+		esac
+	done
+}
+
+_rundir=/var/run/$pkgname
+_logdir=/var/log/$pkgname
+_homedir=/var/lib/$pkgname
+_tmpdir=$_homedir/tmp
+_datadir=/usr/share/$pkgname
+_confdir=/etc/$pkgname
+
+build() {
+	cd "$_builddir"
+	./configure \
+		--prefix=$_datadir \
+		--sbin-path=/usr/sbin/$pkgname \
+		--conf-path=$_confdir/$pkgname.conf \
+		--pid-path=$_rundir/$pkgname.pid \
+		--lock-path=$_rundir/$pkgname.lock \
+		--error-log-path=$_logdir/error.log \
+		--http-log-path=$_logdir/access.log \
+		--http-client-body-temp-path=$_tmpdir/client_body \
+		--http-proxy-temp-path=$_tmpdir/proxy \
+		--http-fastcgi-temp-path=$_tmpdir/fastcgi \
+		--http-uwsgi-temp-path=$_tmpdir/uwsgi \
+		--http-scgi-temp-path=$_tmpdir/scgi \
+		--user=nginx \
+		--group=nginx \
+		--with-ipv6 \
+		--with-file-aio \
+		--with-pcre-jit \
+		--with-http_ssl_module \
+		--with-http_gzip_static_module \
+		--with-http_auth_request_module \
+		--with-http_stub_status_module \
+		--add-module="$srcdir/nginx-module-vts-0.1.18" \
+		|| return 1
+	make || return 1
+}
+
+package() {
+	cd "$_builddir"
+	make DESTDIR="$pkgdir" INSTALLDIRS=vendor install || return 1
+
+	install -m644 -D LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+
+	install -d -m0755 "$pkgdir"/$_confdir/conf.d || return 1
+	install -d -m0755 "$pkgdir"/$_confdir/default.d || return 1
+	install -d -m0755 "$pkgdir"/var/www/localhost/htdocs || return 1
+	install -d -m0700 "$pkgdir"/$_homedir || return 1
+	install -d -m0700 "$pkgdir"/$_tmpdir || return 1
+	install -d -m0700 "$pkgdir"/$_logdir || return 1
+}
+
+sha512sums="89c1b7df7ed0722a930a977edfb94a8278e51ebd7d5a0d0959ac09515374f976283e945c283b704447f7b57fd302bdbbea0d0d11c48aa282f2d53230eb3e63be  nginx-1.15.6.tar.gz
+86b980095b3b80c8dce2e355db514cb4b3039c8408a2f5ca6df9e105d5462952fddd70f6581ec6aa2763e560b591664c27eefd978c4ea777b1f1f808bc60d4ec  nginx-module-vts.tar.gz"
